@@ -4,7 +4,7 @@ import serial
 import threading
 from queue import Queue
 
-# === CONFIG ===
+# CONFIG
 MIDI_FILE = "tool.mid"
 
 SERIAL_MEGA = "COM3"   # fretting
@@ -18,12 +18,12 @@ PLUCK_LATENCY = 0.010
 
 stop_flag = False
 
-# === NOTE MAP (solenoid index) ===
+# NOTE MAP
 NOTE_MAP = {
     40:1, 42:2, 43:3, 45:4, 47:5, 48:6, 50:7
 }
 
-# === SERIAL ===
+# SERIAL 
 
 mega = serial.Serial(SERIAL_MEGA, BAUD, timeout=1)
 uno  = serial.Serial(SERIAL_UNO,  BAUD, timeout=1)
@@ -32,7 +32,7 @@ time.sleep(2)
 
 event_queue = Queue()
 
-# === KILLSWITCH ===
+# KILLSWITCH 
 def killswitch():
     global stop_flag
     input("Press ENTER to stop\n")
@@ -42,7 +42,7 @@ def killswitch():
 
 threading.Thread(target=killswitch, daemon=True).start()
 
-# === BUILD EVENTS ===
+# BUILD EVENTS
 def build_events(mid):
 
     events = []
@@ -116,11 +116,11 @@ def player():
 
 threading.Thread(target=player, daemon=True).start()
 
-# === LOAD MIDI ===
+# LOAD MIDI
 mid = mido.MidiFile(MIDI_FILE)
 events = build_events(mid)
 
-# === PLAYBACK ENGINE ===
+# PLAYBACK ENGINE
 start = time.perf_counter()
 i = 0
 
@@ -135,7 +135,7 @@ while i < len(events) and not stop_flag:
 
     time.sleep(0.001)
 
-# === HARD STOP ===
+# HARD STOP
 mega.write(b"STOP\n")
 uno.write(b"STOP\n")
 
